@@ -14,9 +14,6 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class InnTest {
 
-	final int MAX_PERMITTED_QUALITY_VALUE = 50;
-	final int MIN_PERMITTED_QUALITY_VALUE = 0;
-	
 	final String QUALITY_PROPERTY_NAME = "quality";
 
 	final int DECREASE_NORMAL_ITEM_AFTER_ONE_DAY = -1;
