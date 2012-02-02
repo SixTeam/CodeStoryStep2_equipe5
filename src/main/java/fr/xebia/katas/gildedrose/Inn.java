@@ -23,10 +23,10 @@ public class Inn {
 	public void updateQuality() {
 		for( int i = 0; i < items.size(); i++ ) {
 
-			boolean isNormal =
-					!items.get( i ).getName().equals( "Aged Brie" ) && !items.get( i ).getName().equals( "Backstage passes to a TAFKAL80ETC concert" );
+			//boolean isNormal =
+					
 
-			if( isNormal ) {
+			if( isNormal( i ) ) {
 				decrementItemQualityForNormalItem( i );
 			} else {
 				increaseQualityForBrieOrBackstageItem( i );
@@ -35,8 +35,8 @@ public class Inn {
 			decrementSellinForItem( i );
 
 			if( items.get( i ).getSellIn() < 0 ) {
-				if( !items.get( i ).getName().equals( "Aged Brie" ) ) {
-					if( !items.get( i ).getName().equals( "Backstage passes to a TAFKAL80ETC concert" ) ) {
+				if( !items.get( i ).getName().equals( BRIE_ITEM_NAME ) ) {
+					if( !items.get( i ).getName().equals( BACKSTAGE_ITEM_NAME ) ) {
 				    	decrementItemQualityForNormalItem( i );
 					} else {
 						items.get( i ).setQuality( 0 );
@@ -48,15 +48,19 @@ public class Inn {
 		}
 	}
 
+	private Boolean isNormal( int i ) {
+		return !items.get( i ).getName().equals( BRIE_ITEM_NAME ) && !items.get( i ).getName().equals( BACKSTAGE_ITEM_NAME );
+	}
+	
 	private void decrementSellinForItem( int i ) {
-		if( !items.get( i ).getName().equals( "Sulfuras, Hand of Ragnaros" ) ) {
+		if( !items.get( i ).getName().equals( LEGENDARY_ITEM_NAME ) ) {
 			items.get( i ).setSellIn( items.get( i ).getSellIn() - 1 );
 		}
 	}
 
 	private void decrementItemQualityForNormalItem( int i ) {
 		if( items.get( i ).getQuality() > 0 ) {
-			if( !items.get( i ).getName().equals( "Sulfuras, Hand of Ragnaros" ) ) {
+			if( !items.get( i ).getName().equals( LEGENDARY_ITEM_NAME ) ) {
 				items.get( i ).setQuality( items.get( i ).getQuality() - 1 );
 			}
 
@@ -70,7 +74,7 @@ public class Inn {
 		incrementItemQuality( i );
 
 		if( isMinusThan50( i ) ) {
-			if( items.get( i ).getName().equals( "Backstage passes to a TAFKAL80ETC concert" ) ) {
+			if( items.get( i ).getName().equals( BACKSTAGE_ITEM_NAME ) ) {
 				if( items.get( i ).getSellIn() < 11 ) {
 					incrementItemQuality( i );
 				}
