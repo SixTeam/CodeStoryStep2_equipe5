@@ -23,7 +23,7 @@ public class InnTest {
 	final int INCREASE_AGED_ITEM_AFTER_ONE_DAY = 1;
 	final int NOT_DECREASE_LEGEND_ITEM_AFTER_ONE_DAY = 0;
 	final int INCREASE_BACKSTAGE_ITEM_AFTER_ONE_DAY = 1;
-	final int DECREASE_CONJURED_ITEM_AFTER_ONE_DAY = -2;
+	final int DECREASE_CONJURED_ITEM_AFTER_ONE_DAY = -1;
 
 	@Test
 	public void withPreExistantItems_shouldUpdateQuality_afterOneDay() {
@@ -42,8 +42,7 @@ public class InnTest {
 				previousQualities.get( 2 ) + DECREASE_NORMAL_ITEM_AFTER_ONE_DAY,
 				previousQualities.get( 3 ) + NOT_DECREASE_LEGEND_ITEM_AFTER_ONE_DAY,
 				previousQualities.get( 4 ) + INCREASE_BACKSTAGE_ITEM_AFTER_ONE_DAY,
-				0
-				//qualities.get( 5 ) + DECREASE_CONJURED_ITEM_AFTER_ONE_DAY
+				previousQualities.get( 5 ) + DECREASE_CONJURED_ITEM_AFTER_ONE_DAY
 		);
 	}
 

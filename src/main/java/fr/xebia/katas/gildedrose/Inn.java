@@ -60,9 +60,9 @@ public class Inn {
 				items.get( i ).setQuality( items.get( i ).getQuality() - 1 );
 			}
 
-			if( items.get( i ).getName().equals( CONJURED_ITEM_NAME ) ) {
+			/*if( items.get( i ).getName().equals( CONJURED_ITEM_NAME ) ) {
 				decrementItemQualityForNormalItem( i );
-			}
+			}*/
 		}
 	}
 
