@@ -101,16 +101,9 @@ public class Inn {
 		incrementBackstageItemQuality( item );
 	}
 
-	private void incrementItemQuality_byOne( Item item ) {
-		if( isMinusThanMaxPermittedQualityValue( item ) ) {
-			item.setQuality( item.getQuality() + 1 );
-		}
-	}
-
 	private void incrementBackstageItemQuality( Item item ) {
 		if( isMinusThanMaxPermittedQualityValue( item ) ) {
 			if( item.getName().equals( BACKSTAGE_ITEM_NAME ) ) {
-
 				incrementBecauseTenDaysBeforeConcert( item );
 				incrementBecauseOfFiveDaysBeforeConcert( item );
 			}
@@ -130,6 +123,12 @@ public class Inn {
 	private void incrementBecauseOfFiveDaysBeforeConcert( Item item ) {
 		if( item.getSellIn() <= FIVE_DAYS_BEFORE_CONCERT ) {
 			incrementItemQuality_byOne( item );
+		}
+	}
+
+	private void incrementItemQuality_byOne( Item item ) {
+		if( isMinusThanMaxPermittedQualityValue( item ) ) {
+			item.setQuality( item.getQuality() + 1 );
 		}
 	}
 }

@@ -1,7 +1,6 @@
 package fr.xebia.katas.gildedrose;
 
 import com.google.common.base.Function;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,6 +13,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class InnTest {
 
+	public static final int INCREASE_BACKSTAGE_QUALITY_TEN_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY = 2;
+	public static final int INCREASE_BACKSTAGE_ITEM_QUALITY_FIVE_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY = 3;
 	final String QUALITY_PROPERTY_NAME = "quality";
 
 	final int DECREASE_NORMAL_ITEM_AFTER_ONE_DAY = -1;
@@ -28,10 +29,11 @@ public class InnTest {
 
 		List<Item> items = inn.getItems();
 
-		List<Integer> previousQualities = cloneItemList( items );
+		List<Integer> previousQualities = returnPreviousItemQuality_withCloning( items );
+
 		inn.updateQuality();
 
-		assertThat( inn.getItems() ).hasSize( 6 );
+		assertThat( inn.getItems() ).hasSize( previousQualities.size() );
 
 		assertThat( inn.getItems() ).onProperty( QUALITY_PROPERTY_NAME ).containsExactly(
 				previousQualities.get( 0 ) + DECREASE_NORMAL_ITEM_AFTER_ONE_DAY,
@@ -78,17 +80,25 @@ public class InnTest {
 	@Test
 	public void qualityShouldIncreaseBy2_forBackstageItems_at10DaysToSellin_afterOneDay() {
 		Inn inn = new Inn( Arrays.asList( new Item( BACKSTAGE_ITEM_NAME, TEN_DAYS_BEFORE_CONCERT, 1 ) ) );
+
+		List<Integer> previousQualities = returnPreviousItemQuality_withCloning( inn.getItems() );
+
 		inn.updateQuality();
 
-		assertThat( returnFirstItem( inn ).getQuality() ).isEqualTo( 3 );
+		assertThat( returnFirstItem( inn ).getQuality() )
+			.isEqualTo( previousQualities.get( 0 ) + INCREASE_BACKSTAGE_QUALITY_TEN_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY );
 	}
 
 	@Test
 	public void qualityShouldIncreaseBy3_forBackstageItems_at5DaysToSellin_afterOneDay() {
 		Inn inn = new Inn( Arrays.asList( new Item( BACKSTAGE_ITEM_NAME, FIVE_DAYS_BEFORE_CONCERT, 1 ) ) );
+
+		List<Integer> previousQualities = returnPreviousItemQuality_withCloning( inn.getItems() );
+
 		inn.updateQuality();
 
-		assertThat( returnFirstItem( inn ).getQuality() ).isEqualTo( 4 );
+		assertThat( returnFirstItem( inn ).getQuality() )
+			.isEqualTo( previousQualities.get( 0 ) + INCREASE_BACKSTAGE_ITEM_QUALITY_FIVE_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY );
 	}
 
 	@Test
@@ -96,15 +106,19 @@ public class InnTest {
 		Inn inn = new Inn( Arrays.asList( new Item( BACKSTAGE_ITEM_NAME, 1, MIN_PERMITTED_QUALITY_VALUE ) ) );
 		inn.updateQuality();
 
-		assertThat( returnFirstItem( inn ).getSellIn() ).isEqualTo( MIN_PERMITTED_QUALITY_VALUE );
+		assertThat( returnFirstItem( inn ).getSellIn() ).isEqualTo( 0 );
 	}
 
 	@Test
 	public void qualityShouldDecreaseTwiceFasterThanNormalItem_forConjuredItem() {
 		Inn inn = new Inn( Arrays.asList( new Item( CONJURED_ITEM_NAME, 1, 3 ) ) );
+
+		List<Integer> previousQualities = returnPreviousItemQuality_withCloning( inn.getItems() );
+
 		inn.updateQuality();
 
-		assertThat( returnFirstItem( inn ).getQuality() ).isEqualTo( 1 );
+		assertThat( returnFirstItem( inn ).getQuality() )
+			.isEqualTo( previousQualities.get( 0 ) + DECREASE_CONJURED_ITEM_AFTER_ONE_DAY );
 	}
 
 	private List<Item> buildPreExistantItems() {
@@ -119,7 +133,7 @@ public class InnTest {
 		return items;
 	}
 
-	private ArrayList<Integer> cloneItemList( List<Item> items ) {
+	private ArrayList<Integer> returnPreviousItemQuality_withCloning( List<Item> items ) {
 		return new ArrayList<Integer>( transform( items, new Function<Item, Integer>() {
 			public Integer apply( Item item ) {
 				return item.getQuality();
