@@ -13,8 +13,6 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class InnTest {
 
-	public static final int INCREASE_BACKSTAGE_QUALITY_TEN_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY = 2;
-	public static final int INCREASE_BACKSTAGE_ITEM_QUALITY_FIVE_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY = 3;
 	final String QUALITY_PROPERTY_NAME = "quality";
 
 	final int DECREASE_NORMAL_ITEM_AFTER_ONE_DAY = -1;
@@ -22,6 +20,9 @@ public class InnTest {
 	final int NOT_DECREASE_LEGEND_ITEM_AFTER_ONE_DAY = 0;
 	final int INCREASE_BACKSTAGE_ITEM_AFTER_ONE_DAY = 1;
 	final int DECREASE_CONJURED_ITEM_AFTER_ONE_DAY = -2;
+	final int INCREASE_BACKSTAGE_QUALITY_TEN_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY = 2;
+	final int INCREASE_BACKSTAGE_ITEM_QUALITY_FIVE_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY = 3;
+
 
 	@Test
 	public void withPreExistantItems_shouldUpdateQuality_afterOneDay() {
