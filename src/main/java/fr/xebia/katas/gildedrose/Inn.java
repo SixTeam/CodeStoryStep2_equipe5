@@ -31,15 +31,19 @@ public class Inn {
 		
 		for( Item item : items ) {
 
-			if( isNotBrieOrBackstageItem( item ) ) {
-				decrementItemQualityForNormalItem( item );
-			} else {
-				increaseQualityForBrieOrBackstageItem( item );
-			}
+			updateItemQuality( item );
 
 			decrementSellinForItem( item );
 
 			updateItemQualityWhenConcertDateIsPassed( item );
+		}
+	}
+
+	private void updateItemQuality( Item item ) {
+		if( isNotBrieOrBackstageItem( item ) ) {
+			decrementItemQualityForNormalItem( item );
+		} else {
+			increaseQualityForBrieOrBackstageItem( item );
 		}
 	}
 
@@ -71,9 +75,9 @@ public class Inn {
 				item.setQuality( item.getQuality() - 1 );
 			}
 
-			/*if( items.get( i ).getName().equals( CONJURED_ITEM_NAME ) ) {
-				decrementItemQualityForNormalItem( i );
-			}*/
+			if( item.getName().equals( CONJURED_ITEM_NAME ) ) {
+				item.setQuality( item.getQuality() - 1 );
+			}
 		}
 	}
 

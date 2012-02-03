@@ -20,7 +20,7 @@ public class InnTest {
 	final int INCREASE_AGED_ITEM_AFTER_ONE_DAY = 1;
 	final int NOT_DECREASE_LEGEND_ITEM_AFTER_ONE_DAY = 0;
 	final int INCREASE_BACKSTAGE_ITEM_AFTER_ONE_DAY = 1;
-	final int DECREASE_CONJURED_ITEM_AFTER_ONE_DAY = -1;
+	final int DECREASE_CONJURED_ITEM_AFTER_ONE_DAY = -2;
 
 	@Test
 	public void withPreExistantItems_shouldUpdateQuality_afterOneDay() {
@@ -99,7 +99,7 @@ public class InnTest {
 		assertThat( returnFirstItem( inn ).getSellIn() ).isEqualTo( MIN_PERMITTED_QUALITY_VALUE );
 	}
 
-	@Ignore
+	@Test
 	public void qualityShouldDecreaseTwiceFasterThanNormalItem_forConjuredItem() {
 		Inn inn = new Inn( Arrays.asList( new Item( CONJURED_ITEM_NAME, 1, 3 ) ) );
 		inn.updateQuality();
