@@ -41,9 +41,11 @@ public class Inn {
 
 	private void updateItemQuality( Item item ) {
 		if( isNotBrieOrBackstageItem( item ) ) {
-			decrementItemQualityForNormalItem( item );
+			decrementNormalItemQuality( item );
+			decrementConjuredItemQuality( item );
 		} else {
-			increaseQualityForBrieOrBackstageItem( item );
+			incrementItemQuality_byOne( item );
+			incrementBackstageItemQuality( item );
 		}
 	}
 
@@ -69,15 +71,15 @@ public class Inn {
 		}
 	}
 
-	private void decrementItemQualityForNormalItem( Item item ) {
-		if( item.getQuality() > MIN_PERMITTED_QUALITY_VALUE ) {
-			if( !item.getName().equals( LEGENDARY_ITEM_NAME ) ) {
-				item.setQuality( item.getQuality() - 1 );
-			}
-
-			if( item.getName().equals( CONJURED_ITEM_NAME ) ) {
-				item.setQuality( item.getQuality() - 1 );
-			}
+	private void decrementNormalItemQuality( Item item ) {
+		if( item.getQuality() > MIN_PERMITTED_QUALITY_VALUE && !item.getName().equals( LEGENDARY_ITEM_NAME ) ) {
+			item.setQuality( item.getQuality() - 1 );
+		}
+	}
+	
+	private void decrementConjuredItemQuality( Item item ) {
+		if( item.getQuality() > MIN_PERMITTED_QUALITY_VALUE && item.getName().equals( CONJURED_ITEM_NAME ) ) {
+			item.setQuality( item.getQuality() - 1 );
 		}
 	}
 
@@ -85,20 +87,13 @@ public class Inn {
 		if( concertDateIsPassed( item ) ) {
 			if( isNotBrieItem( item ) ) {
 				if( isNotBackstageItem( item ) ) {
-					decrementItemQualityForNormalItem( item );
+					decrementNormalItemQuality( item );
+					decrementConjuredItemQuality( item );
 				} else {
 					item.setQuality( MIN_PERMITTED_QUALITY_VALUE );
 				}
-			} else {
-				incrementItemQuality_byOne( item );
 			}
 		}
-	}
-
-	private void increaseQualityForBrieOrBackstageItem( Item item ) {
-		incrementItemQuality_byOne( item );
-
-		incrementBackstageItemQuality( item );
 	}
 
 	private void incrementBackstageItemQuality( Item item ) {
@@ -108,10 +103,6 @@ public class Inn {
 				incrementBecauseOfFiveDaysBeforeConcert( item );
 			}
 		}
-	}
-
-	private boolean isMinusThanMaxPermittedQualityValue( Item item ) {
-		return item.getQuality() < MAX_PERMITTED_QUALITY_VALUE;
 	}
 
 	private void incrementBecauseTenDaysBeforeConcert( Item item ) {
@@ -130,5 +121,9 @@ public class Inn {
 		if( isMinusThanMaxPermittedQualityValue( item ) ) {
 			item.setQuality( item.getQuality() + 1 );
 		}
+	}
+
+	private boolean isMinusThanMaxPermittedQualityValue( Item item ) {
+		return item.getQuality() < MAX_PERMITTED_QUALITY_VALUE;
 	}
 }

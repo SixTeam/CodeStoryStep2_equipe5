@@ -16,7 +16,7 @@ public class InnTest {
 	final String QUALITY_PROPERTY_NAME = "quality";
 
 	final int DECREASE_NORMAL_ITEM_AFTER_ONE_DAY = -1;
-	final int INCREASE_AGED_ITEM_AFTER_ONE_DAY = 1;
+	final int INCREASE_BRIE_ITEM_AFTER_ONE_DAY = 1;
 	final int NOT_DECREASE_LEGEND_ITEM_AFTER_ONE_DAY = 0;
 	final int INCREASE_BACKSTAGE_ITEM_AFTER_ONE_DAY = 1;
 	final int DECREASE_CONJURED_ITEM_AFTER_ONE_DAY = -2;
@@ -38,7 +38,7 @@ public class InnTest {
 
 		assertThat( inn.getItems() ).onProperty( QUALITY_PROPERTY_NAME ).containsExactly(
 				previousQualities.get( 0 ) + DECREASE_NORMAL_ITEM_AFTER_ONE_DAY,
-				previousQualities.get( 1 ) + INCREASE_AGED_ITEM_AFTER_ONE_DAY,
+				previousQualities.get( 1 ) + INCREASE_BRIE_ITEM_AFTER_ONE_DAY,
 				previousQualities.get( 2 ) + DECREASE_NORMAL_ITEM_AFTER_ONE_DAY,
 				previousQualities.get( 3 ) + NOT_DECREASE_LEGEND_ITEM_AFTER_ONE_DAY,
 				previousQualities.get( 4 ) + INCREASE_BACKSTAGE_ITEM_AFTER_ONE_DAY,
@@ -87,7 +87,7 @@ public class InnTest {
 		inn.updateQuality();
 
 		assertThat( returnFirstItem( inn ).getQuality() )
-			.isEqualTo( previousQualities.get( 0 ) + INCREASE_BACKSTAGE_QUALITY_TEN_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY );
+				.isEqualTo( previousQualities.get( 0 ) + INCREASE_BACKSTAGE_QUALITY_TEN_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY );
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class InnTest {
 		inn.updateQuality();
 
 		assertThat( returnFirstItem( inn ).getQuality() )
-			.isEqualTo( previousQualities.get( 0 ) + INCREASE_BACKSTAGE_ITEM_QUALITY_FIVE_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY );
+				.isEqualTo( previousQualities.get( 0 ) + INCREASE_BACKSTAGE_ITEM_QUALITY_FIVE_DAYS_BEFORE_CONCERT_AFTER_ONE_DAY );
 	}
 
 	@Test
@@ -119,7 +119,31 @@ public class InnTest {
 		inn.updateQuality();
 
 		assertThat( returnFirstItem( inn ).getQuality() )
-			.isEqualTo( previousQualities.get( 0 ) + DECREASE_CONJURED_ITEM_AFTER_ONE_DAY );
+				.isEqualTo( previousQualities.get( 0 ) + DECREASE_CONJURED_ITEM_AFTER_ONE_DAY );
+	}
+
+	@Test
+	public void qualityAfterMoreThanOneDay() {
+		Inn inn = new Inn( buildPreExistantItems() );
+
+		List<Item> items = inn.getItems();
+
+		List<Integer> previousQualities = returnPreviousItemQuality_withCloning( items );
+
+		inn.updateQuality();
+		inn.updateQuality();
+		inn.updateQuality();
+
+		assertThat( inn.getItems() ).hasSize( previousQualities.size() );
+
+		assertThat( inn.getItems() ).onProperty( QUALITY_PROPERTY_NAME ).containsExactly(
+				previousQualities.get( 0 ) + DECREASE_NORMAL_ITEM_AFTER_ONE_DAY * 3,
+				previousQualities.get( 1 ) + INCREASE_BRIE_ITEM_AFTER_ONE_DAY * 3,
+				previousQualities.get( 2 ) + DECREASE_NORMAL_ITEM_AFTER_ONE_DAY * 3,
+				previousQualities.get( 3 ) + NOT_DECREASE_LEGEND_ITEM_AFTER_ONE_DAY * 3,
+				previousQualities.get( 4 ) + INCREASE_BACKSTAGE_ITEM_AFTER_ONE_DAY * 3,
+				MIN_PERMITTED_QUALITY_VALUE
+		);
 	}
 
 	private List<Item> buildPreExistantItems() {
