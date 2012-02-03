@@ -14,6 +14,9 @@ public class Inn {
 	public static final Integer MAX_PERMITTED_QUALITY_VALUE = 50;
 	public static final int MIN_PERMITTED_QUALITY_VALUE = 0;
 
+	public static final int TEN_DAYS_BEFORE_CONCERT = 10;
+	public static final int FIVE_DAYS_BEFORE_CONCERT = 5;
+
 	private List<Item> items;
 
 	public Inn( List<Item> items ) {
@@ -25,7 +28,8 @@ public class Inn {
 	}
 
 	public void updateQuality() {
-		for( int item = 0; item < items.size(); item++ ) {
+		
+		for( Item item : items ) {
 
 			if( isNotBrieOrBackstageItem( item ) ) {
 				decrementItemQualityForNormalItem( item );
@@ -35,46 +39,36 @@ public class Inn {
 
 			decrementSellinForItem( item );
 
-			if( concertDateIsPassed( item ) ) {
-				if( isNotBrieItem( item ) ) {
-					if( isNotBackstageItem( item ) ) {
-				    	decrementItemQualityForNormalItem( item );
-					} else {
-						items.get( item ).setQuality( MIN_PERMITTED_QUALITY_VALUE );
-					}
-				} else {
-					incrementItemQuality( item );
-				}
-			}
+			updateItemQualityWhenConcertDateIsPassed( item );
 		}
 	}
 
-	private boolean concertDateIsPassed( int item ) {
-		return items.get( item ).getSellIn() < 0;
+	private boolean concertDateIsPassed( Item item ) {
+		return item.getSellIn() < 0;
 	}
 
-	private Boolean isNotBrieOrBackstageItem( int item ) {
+	private Boolean isNotBrieOrBackstageItem( Item item ) {
 		return isNotBrieItem( item ) && isNotBackstageItem( item );
 	}
 
-	private boolean isNotBrieItem( int item ) {
-		return !items.get( item ).getName().equals( BRIE_ITEM_NAME );
+	private boolean isNotBrieItem( Item item ) {
+		return !item.getName().equals( BRIE_ITEM_NAME );
 	}
 
-	private boolean isNotBackstageItem( int item ) {
-		return !items.get( item ).getName().equals( BACKSTAGE_ITEM_NAME );
+	private boolean isNotBackstageItem( Item item ) {
+		return !item.getName().equals( BACKSTAGE_ITEM_NAME );
 	}
 
-	private void decrementSellinForItem( int item ) {
-		if( !items.get( item ).getName().equals( LEGENDARY_ITEM_NAME ) ) {
-			items.get( item ).setSellIn( items.get( item ).getSellIn() - 1 );
+	private void decrementSellinForItem( Item item ) {
+		if( !item.getName().equals( LEGENDARY_ITEM_NAME ) ) {
+			item.setSellIn( item.getSellIn() - 1 );
 		}
 	}
 
-	private void decrementItemQualityForNormalItem( int item ) {
-		if( items.get( item ).getQuality() > MIN_PERMITTED_QUALITY_VALUE ) {
-			if( !items.get( item ).getName().equals( LEGENDARY_ITEM_NAME ) ) {
-				items.get( item ).setQuality( items.get( item ).getQuality() - 1 );
+	private void decrementItemQualityForNormalItem( Item item ) {
+		if( item.getQuality() > MIN_PERMITTED_QUALITY_VALUE ) {
+			if( !item.getName().equals( LEGENDARY_ITEM_NAME ) ) {
+				item.setQuality( item.getQuality() - 1 );
 			}
 
 			/*if( items.get( i ).getName().equals( CONJURED_ITEM_NAME ) ) {
@@ -83,29 +77,55 @@ public class Inn {
 		}
 	}
 
-	private void increaseQualityForBrieOrBackstageItem( int item ) {
-		incrementItemQuality( item );
-
-		if( isMinusThan50( item ) ) {
-			if( items.get( item ).getName().equals( BACKSTAGE_ITEM_NAME ) ) {
-				if( items.get( item ).getSellIn() < 11 ) {
-					incrementItemQuality( item );
+	private void updateItemQualityWhenConcertDateIsPassed( Item item ) {
+		if( concertDateIsPassed( item ) ) {
+			if( isNotBrieItem( item ) ) {
+				if( isNotBackstageItem( item ) ) {
+					decrementItemQualityForNormalItem( item );
+				} else {
+					item.setQuality( MIN_PERMITTED_QUALITY_VALUE );
 				}
-
-				if( items.get( item ).getSellIn() < 6 ) {
-					incrementItemQuality( item );
-				}
+			} else {
+				incrementItemQuality_byOne( item );
 			}
 		}
 	}
 
-	private boolean isMinusThan50( int item ) {
-		return items.get( item ).getQuality() < MAX_PERMITTED_QUALITY_VALUE;
+	private void increaseQualityForBrieOrBackstageItem( Item item ) {
+		incrementItemQuality_byOne( item );
+
+		incrementBackstageItemQuality( item );
 	}
 
-	private void incrementItemQuality( int item ) {
-		if( isMinusThan50( item ) ) {
-			items.get( item ).setQuality( items.get( item ).getQuality() + 1 );
+	private void incrementItemQuality_byOne( Item item ) {
+		if( isMinusThanMaxPermittedQualityValue( item ) ) {
+			item.setQuality( item.getQuality() + 1 );
+		}
+	}
+
+	private void incrementBackstageItemQuality( Item item ) {
+		if( isMinusThanMaxPermittedQualityValue( item ) ) {
+			if( item.getName().equals( BACKSTAGE_ITEM_NAME ) ) {
+
+				incrementBecauseTenDaysBeforeConcert( item );
+				incrementBecauseOfFiveDaysBeforeConcert( item );
+			}
+		}
+	}
+
+	private boolean isMinusThanMaxPermittedQualityValue( Item item ) {
+		return item.getQuality() < MAX_PERMITTED_QUALITY_VALUE;
+	}
+
+	private void incrementBecauseTenDaysBeforeConcert( Item item ) {
+		if( item.getSellIn() <= TEN_DAYS_BEFORE_CONCERT ) {
+			incrementItemQuality_byOne( item );
+		}
+	}
+
+	private void incrementBecauseOfFiveDaysBeforeConcert( Item item ) {
+		if( item.getSellIn() <= FIVE_DAYS_BEFORE_CONCERT ) {
+			incrementItemQuality_byOne( item );
 		}
 	}
 }

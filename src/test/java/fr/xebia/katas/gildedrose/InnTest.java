@@ -76,16 +76,16 @@ public class InnTest {
 	}
 
 	@Test
-	public void qualityShouldIncreaseBy2_forBackstageItemsAt10DaysToSellin() {
-		Inn inn = new Inn( Arrays.asList( new Item( BACKSTAGE_ITEM_NAME, 9, 1 ) ) );
+	public void qualityShouldIncreaseBy2_forBackstageItems_at10DaysToSellin_afterOneDay() {
+		Inn inn = new Inn( Arrays.asList( new Item( BACKSTAGE_ITEM_NAME, TEN_DAYS_BEFORE_CONCERT, 1 ) ) );
 		inn.updateQuality();
 
 		assertThat( returnFirstItem( inn ).getQuality() ).isEqualTo( 3 );
 	}
 
 	@Test
-	public void qualityShouldIncreaseBy3_forBackstageItemsAt5DaysToSellin() {
-		Inn inn = new Inn( Arrays.asList( new Item( BACKSTAGE_ITEM_NAME, 3, 1 ) ) );
+	public void qualityShouldIncreaseBy3_forBackstageItems_at5DaysToSellin_afterOneDay() {
+		Inn inn = new Inn( Arrays.asList( new Item( BACKSTAGE_ITEM_NAME, FIVE_DAYS_BEFORE_CONCERT, 1 ) ) );
 		inn.updateQuality();
 
 		assertThat( returnFirstItem( inn ).getQuality() ).isEqualTo( 4 );
